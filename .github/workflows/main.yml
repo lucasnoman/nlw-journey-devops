@@ -28,12 +28,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      #  Usa o SHA recuperado no step anterior para versionar a imagem
-      - name: Build docker image
-        run: docker build -t lucasnoman/nlw-journey-devops:${{ steps.generate_sha.outputs.sha }} .
-
-      - name: Push image
-        run: |
-          docker push lucasnoman/nlw-journey-devops:${{ steps.generate_sha.outputs.sha }}
-          docker tag lucasnoman/nlw-journey-devops:${{ steps.generate_sha.outputs.sha }} lucasnoman/nlw-journey-devops:latest
-          docker push lucasnoman/nlw-journey-devops:latest
+      # Marketplace: Build and push Docker images
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            lucasnoman/nlw-journey-devops:${{ steps.generate_sha.outputs.sha }}
+            lucasnoman/nlw-journey-devops:latest
